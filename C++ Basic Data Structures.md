@@ -55,11 +55,62 @@ nums.back();
 ## [Hash Table](https://en.cppreference.com/w/cpp/container/unordered_map)
 
 ```c++
-
+std::unordered_map<int, int> map;
+map.at(key);
+map[key];
+map[key] = item;
+map.count(key);
+map.erase(key);
 ```
 
-## Hash Set
+## [Hash Set](https://en.cppreference.com/w/cpp/container/unordered_set)
+
+```c++
+std::unordered_set<int> set;
+set.count(item);
+set.insert(item);
+set.erase(item);
+```
 
 ## Tree 
 
+```c++
+// No build in Tree
+
+// Binary Tree
+struct Node {
+	int val;
+    Node* left;
+    Node* right;
+
+    Node(T val, Node* left = nullptr, Node* right = nullptr)
+        : val{val}, left{left}, right{right} {}
+};
+
+// N-ary Tree
+#include <vector>
+
+struct Node {
+    int val;
+    std::vector<Node*> children;
+
+    Node(int val, std::vector<Node*> children = {})
+        : val{val}, children{children} {}
+};
+```
+
 ## Pair
+
+```c++
+#include <utility>  // pair, make_pair
+#include <string>   // string
+
+std::pair<std::string, int> task1;    // default constructor
+std::pair<std::string, int> task2("write tests", 5);  // value init
+
+task1 = std::make_pair(std::string("define specs"), 3);    // assign values to task1
+task2.second = 7;      // change the second value in task2
+
+std::cout << task1.first << " takes " << task1.second << std::endl;   // define specs takes 3
+std::cout << task2.first << " takes " << task2.second << std::endl;   // write tests takes 7
+```
