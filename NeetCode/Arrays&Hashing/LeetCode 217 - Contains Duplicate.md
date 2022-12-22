@@ -40,7 +40,7 @@ public:
 - O(nlogn) Time
 - O(1) Space
 
-## Optimal Solution - HashSet:
+## HashSet:
 
 ```c++
 class Solution {
