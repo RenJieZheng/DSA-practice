@@ -1,21 +1,38 @@
 ## Array
 
 ```c++
-int nums[3]; // fixed array of size 3
-int a[5] = {1, 2, 3}; // [1, 2, 3, 0, 0]
-a[3] = 4; // [1, 2, 3, 4, 0]
+// Initialization
+int nums[3]; 
+int a[5] = {1, 2, 3}; 
 
-// getting the size of an array
-int len = sizeof(a);
-int len2 = std::size(a);
+// Mutating
+a[3] = 4; 
+
+// Capacity
+sizeof(a);
+std::size(a);
 ```
 
 ## [Vector](https://en.cppreference.com/w/cpp/container/vector) 
 
 ```c++
-std::vector<int> nums{1, 2, 3, 4, 5};
-nums.emplace_back(4);
+// Initialization
+std::vector<int> nums;
+std::vector<int> nums {1, 2, 3, 4, 5};
+
+// Mutating
+nums.emplace_back(item);
+nums.push_back(item);
 nums.pop_back();
+nums[index] = value;
+
+// Accessing
+nums[index];
+nums.at(index);
+nums.front();
+nums.back();
+
+// Capacity
 nums.size();
 ```
 
@@ -32,35 +49,70 @@ struct LinkedListNode {
 ## [Stack](https://en.cppreference.com/w/cpp/container/stack)
 
 ```c++
+// Initialization
 std::stack<int> c1;
-c1.push(5); // O9
+
+// Mutating
+c1.push(item);
+c1.emplace(item);
 c1.pop();
-c1.size();
+
+// Accesing
 c1.top();
+
+// Capacity
+c1.empty();
+c1.size();
 ```
 
 ## [Queue](https://en.cppreference.com/w/cpp/container/deque)
 
 ```c++
+// Initialization
 std::deque<int> nums;
-nums.push_back(1);
-nums.push_front(0);
+
+// Mutating
+nums.push_back(item);
+nums.push_front(item);
+nums.emplace_back(item);
+nums.emplace_front(item);
 nums.pop_front();
 nums.pop_back();
-nums.size();
+
+// Accessing
 nums.front();
 nums.back();
+nums[index];
+nums.at(index);
+
+// Capacity
+nums.size();
+nums.empty();
+
 ```
 
 ## [Hash Table](https://en.cppreference.com/w/cpp/container/unordered_map)
 
 ```c++
+// Initialization
 std::unordered_map<int, int> map;
+
+// Accessing
 map.at(key);
 map[key];
+
+// Mutating
+map.insert({key, value});
 map[key] = item;
-map.count(key);
 map.erase(key);
+
+// Locating
+map.count(key);
+
+// Capactiy
+map.size();
+map.empty();
+
 ```
 
 ## [Hash Set](https://en.cppreference.com/w/cpp/container/unordered_set)
@@ -68,8 +120,17 @@ map.erase(key);
 ```c++
 std::unordered_set<int> set;
 set.count(item);
+
+// Mutating
 set.insert(item);
 set.erase(item);
+
+// Locating
+set.count(item);
+
+// Capacity
+set.empty();
+set.size();
 ```
 
 ## Tree 
@@ -105,12 +166,11 @@ struct Node {
 #include <utility>  // pair, make_pair
 #include <string>   // string
 
-std::pair<std::string, int> task1;    // default constructor
-std::pair<std::string, int> task2("write tests", 5);  // value init
+// Initialization
+std::pair<std::string, int> task1;
+std::pair<std::string, int> task2(First, Second); 
+task1 = std::make_pair(First, Second);
 
-task1 = std::make_pair(std::string("define specs"), 3);    // assign values to task1
-task2.second = 7;      // change the second value in task2
-
-std::cout << task1.first << " takes " << task1.second << std::endl;   // define specs takes 3
-std::cout << task2.first << " takes " << task2.second << std::endl;   // write tests takes 7
+// Mutating
+task2.second = 7;
 ```
