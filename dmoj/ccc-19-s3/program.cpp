@@ -3,7 +3,7 @@
 
 using namespace std;
 
-const int X = 'X';
+const int X = -1000001;
 
 void fill_row(int matrix[3][3], int row, int vals[3]) {
     for (int i = 0; i < 3; i++) {
@@ -18,11 +18,23 @@ void fill_col(int matrix[3][3], int col, int vals[3]) {
 }
 
 void fill_row_auto(int matrix[3][3], int row) {
-
+    if (matrix[row][0] != X && matrix[row][2] != X) {
+        matrix[row][1] = matrix[row][0] + ((matrix[row][2] - matrix[row][0]) / 2);
+    } else if (matrix[row][0] != X && matrix[row][1] != X) {
+        matrix[row][2] = matrix[row][1] + (matrix[row][1] - matrix[row][0]);
+    } else if (matrix[row][1] != X && matrix[row][2] != X) {
+        matrix[row][0] = matrix[row][1] - (matrix[row][2] - matrix[row][1]);
+    } 
 }
 
 void fill_col_auto(int matrix[3][3], int col) {
-
+    if (matrix[0][col] != X && matrix[2][col] != X) {
+        matrix[1][col] = matrix[0][col] + ((matrix[2][col] - matrix[0][col]) / 2);
+    } else if (matrix[0][col] != X && matrix[1][col] != X) {
+        matrix[2][col] = matrix[1][col] + (matrix[1][col] - matrix[0][col]);
+    } else if (matrix[1][col] != X && matrix[2][col] != X) {
+        matrix[0][col] = matrix[1][col] - ((matrix[2][col] - matrix[1][col]));
+    }
 }
 
 void find_single_element_in_col(int matrix[3][3], int col, int &el, int &el_r) {
@@ -42,7 +54,7 @@ void fill_easily_solvable_positions(int matrix[3][3], bool row_full[3], bool col
             // Check and Fill Row
             if (!row_full[i]) {
                 int num_x = 0;
-                for (int j = 0; j > 3; j++) {
+                for (int j = 0; j < 3; j++) {
                     if (matrix[i][j] == X) {
                         num_x++;
                     }
@@ -59,7 +71,7 @@ void fill_easily_solvable_positions(int matrix[3][3], bool row_full[3], bool col
             // Check and Fill Column
             if (!col_full[i]) {
                 int num_x = 0;
-                for (int j = 0; i < 3; j++) {
+                for (int j = 0; j < 3; j++) {
                     if (matrix[j][i] == X) {
                         num_x++;
                     }
@@ -80,11 +92,18 @@ int main() {
     cin.sync_with_stdio(0);
     cin.tie(0);
 
-    int matrix[3][3] = {0};
-    
+    int matrix[3][3];
+
     for (int i = 0; i < 3; i++) {
-        for (int j = 0; i < 3; j++) {
-            cin >> matrix[i][j];
+        for (int j = 0; j < 3; j++) {
+            string s;
+            cin >> s;
+
+            if (s == "X") {
+                matrix[i][j] = X;
+            } else {
+                matrix[i][j] = stoi(s);
+            }
         }
     }
 
@@ -93,7 +112,7 @@ int main() {
     fill_easily_solvable_positions(matrix, row_full, col_full);
 
     if (row_full[0] || row_full[1] || row_full[2]) {
-        if (!row_full[0] && row_full[1] && row_full[2]) {
+        if (!(row_full[0] && row_full[1] && row_full[2])) {
             // Only 1 row is full, and there are at most 1 column full, 
             // otherwise, the fill_easily_solvable_positions would've been able to fill in each cell
 
@@ -108,28 +127,22 @@ int main() {
                 // fill_easily_solvable_positions fill in the rest
 
                 if (full_row == 0) {
-                    if (full_col == 0) {
-                        matrix[1][1] = max(matrix[0][1], matrix[1][0]);
-                    } else if (full_col == 1) {
-                        matrix[0][0] = min(matrix[0][1], matrix[1][0]);
+                    if (full_col == 1) {
+                        matrix[1][0] = matrix[0][0];
                     } else {
                         matrix[1][1] = matrix[0][1];
                     }
                 } else if (full_row == 1) {
-                    if (full_col == 0) {
-
-                    } else if (full_col == 1) {
-
+                    if (full_col == 1) {
+                        matrix[0][0] = matrix[1][0];
                     } else {
-                        
+                        matrix[0][1] = matrix[1][1];
                     }
                 } else {
-                    if (full_col == 0) {
-
-                    } else if (full_col == 1) {
-
+                    if (full_col == 1) {
+                        matrix[1][0] = matrix[2][0];
                     } else {
-                        
+                        matrix[1][1] = matrix[2][1];
                     }
                 }
                 fill_easily_solvable_positions(matrix, row_full, col_full);
@@ -153,24 +166,47 @@ int main() {
         // These elements can just be duplciated. 
         // From the problem restrictions there are at least 2 non X elements
 
+        int num_non_x = 0;
         int a = X, a_r = -1;
         find_single_element_in_col(matrix, 0, a, a_r);
+        if (a != X) num_non_x++;
         int b = X, b_r = -1;
         find_single_element_in_col(matrix, 1, b, b_r);
+        if (b != X) num_non_x++;
         int c = X, c_r = -1;
         find_single_element_in_col(matrix, 2, c, c_r);
+        if (c != X) num_non_x++;
+
+        if (num_non_x == 0) {
+            a = 1;
+            b = 1;
+            c = 1;
+        } else if (num_non_x == 1) {
+            if (a != X) b = a;
+            else if (b != X) a = b;
+            else if (c != X) b = c;
+        }
 
         if (a == X) {
             a = b - (c - b);
         } else if (b == X) {
+            // This case could be difficult if c - a is not even and are on opposite corners
             b = a + ((c - a) / 2);
         } else if (c == X) {
             c = b + (b - a);
         }
 
         int vals[3] = {a, b, c};
-        fill_col(matrix, 0, vals);
-        fill_col(matrix, 1, vals);
-        fill_col(matrix, 2, vals);
+        fill_row(matrix, 0, vals);
+        fill_row(matrix, 1, vals);
+        fill_row(matrix, 2, vals);
+    }
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            cout << matrix[i][j];
+            if (j != 2) cout << " ";
+        }
+        cout << endl;
     }
 }
